@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  # keycloak
+  keycloak:
+    container_name: keycloak
+    build: ./keycloak-containers/server
+    ports:
+      - 4000:8080
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: keycloak
+      KEYCLOAK_USER: local
+      KEYCLOAK_PASSWORD: local
+    volumes:
+      - ./data:/opt/jboss/keycloak/standalone/data
+
+  app:
+    container_name: rust-api
+    build: ./rust_api
+    ports:
+      - 8080:8080
+    volumes:
+      - ./rust_api:/app:cache
+    working_dir: /app
+    tty: true
+    # command: /bin/sh -c "cargo watch -x run"
